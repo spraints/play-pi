@@ -3,6 +3,8 @@
 from RPi import GPIO
 from time import sleep
 import atexit
+import sys
+import os
 
 def main():
   print "  2  4  6  8 10 12 14 16 18 20 22 24 26"
@@ -25,7 +27,7 @@ def main():
     sleep(60)
 
 def clicked(channel):
-  print "CLICK {}".format(channel)
+  os.system("curl -X POST http://{}:4576/talk".format(sys.argv[1]))
 
 atexit.register(GPIO.cleanup)
 
