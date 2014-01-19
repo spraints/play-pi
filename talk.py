@@ -23,8 +23,12 @@ def main():
 
   GPIO.add_event_detect(3, GPIO.RISING, callback=clicked, bouncetime=200)
 
+  blink_seconds = 1
   while True:
-    sleep(60)
+    GPIO.output(12, True)
+    sleep(blink_seconds)
+    GPIO.output(12, False)
+    sleep(blink_seconds)
 
 def clicked(channel):
   sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
