@@ -1,15 +1,18 @@
 #/ Usage: ruby talk.rb
 
-require 'sinatra'
+require 'socket'
 
-set :port, 4576
+r,w = IO.pipe
+running = true
+[:INT, :TERM, :QUIT].each { |sig| trap(sig) { running = false ; w << '.' } }
 
-post '/talk' do
-  system 'say hello raspberry pi'
-  'ok'
-end
-
-get /.*/ do
-  content_type :text
-  "Try this:\n$ curl -X POST http://#{`hostname`}/talk\n"
+socket = UDPSocket.new
+socket.bind('', 4576)
+while running
+  rs, ws = IO.select([socket, r])
+  if rs.include?(socket)
+    message, sender = socket.recvfrom(1024)
+    p [message, sender]
+    system "say", "hello hello hello i'm the one who loves you so"
+  end
 end
